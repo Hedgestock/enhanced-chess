@@ -1,15 +1,12 @@
+mod bitboard;
 mod board;
 mod game;
 mod pieces;
 
-use bevy::{picking::hover::PickingInteraction, prelude::*};
+use bevy::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
-use crate::{
-    board::BoardCoordinates,
-    game::BitBoard,
-    pieces::{ChessPiece, PieceColor, PieceType},
-};
+use crate::{bitboard::BitBoard, board::BoardCoordinates, pieces::ChessPiece};
 
 fn main() {
     App::new()
@@ -24,9 +21,6 @@ fn main() {
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res<game::GameState>) {
     commands.spawn(Camera2d);
-
-    println!("{:?}", &game_state.white_pieces());
-    println!("{:?}", &game_state.black_pieces());
 
     for bb in &game_state.pieces {
         let piece_type = &bb.0.0;
