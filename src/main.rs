@@ -6,8 +6,7 @@ use bevy::{picking::hover::PickingInteraction, prelude::*};
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
 use crate::{
-    board::BoardCoordinates,
-    pieces::{PieceColor, PieceType, ChessPiece},
+    board::BoardCoordinates, game::BitBoard, pieces::{ChessPiece, PieceColor, PieceType}
 };
 
 fn main() {
@@ -26,6 +25,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
 
     println!("{:?}", game_state.white_pieces());
     println!("{:?}", game_state.black_pieces());
+    println!("{:?}", get_piece_positions(game_state.white_pawn.clone()));
+
+    
 
     // for i in 0..8 {
     //     commands.spawn(ChessPiece::new(
@@ -158,4 +160,16 @@ fn hover_system(
             PickingInteraction::Pressed => {}
         }
     }
+}
+
+fn get_piece_positions(mut board: BitBoard) -> Vec<u8> {
+    let mut positions = Vec::new();
+    while board.0 != 0 {
+        // Get index of the lowest set bit (0-63)
+        let sq = board.0.trailing_zeros() as u8;
+        positions.push(sq);
+        // Clear the lowest set bit
+        board.0 &= board.0 - 1;
+    }
+    positions
 }

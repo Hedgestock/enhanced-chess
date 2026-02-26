@@ -2,14 +2,14 @@ use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, M
 
 use bevy::ecs::resource::Resource;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct BitBoard(pub u64);
 
 impl BitAnd for BitBoard {
     type Output = BitBoard;
 
     fn bitand(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0 & other.0)
+        return BitBoard(self.0 & other.0);
     }
 }
 
@@ -17,7 +17,7 @@ impl BitAnd for &BitBoard {
     type Output = BitBoard;
 
     fn bitand(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0 & other.0)
+        return BitBoard(self.0 & other.0);
     }
 }
 
@@ -25,7 +25,7 @@ impl BitAnd<&BitBoard> for BitBoard {
     type Output = BitBoard;
 
     fn bitand(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0 & other.0)
+        return BitBoard(self.0 & other.0);
     }
 }
 
@@ -33,7 +33,7 @@ impl BitAnd<BitBoard> for &BitBoard {
     type Output = BitBoard;
 
     fn bitand(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0 & other.0)
+        return BitBoard(self.0 & other.0);
     }
 }
 
@@ -42,7 +42,7 @@ impl BitOr for BitBoard {
     type Output = BitBoard;
 
     fn bitor(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0 | other.0)
+        return BitBoard(self.0 | other.0);
     }
 }
 
@@ -50,7 +50,7 @@ impl BitOr for &BitBoard {
     type Output = BitBoard;
 
     fn bitor(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0 | other.0)
+        return BitBoard(self.0 | other.0);
     }
 }
 
@@ -58,7 +58,7 @@ impl BitOr<&BitBoard> for BitBoard {
     type Output = BitBoard;
 
     fn bitor(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0 | other.0)
+        return BitBoard(self.0 | other.0);
     }
 }
 
@@ -66,7 +66,7 @@ impl BitOr<BitBoard> for &BitBoard {
     type Output = BitBoard;
 
     fn bitor(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0 | other.0)
+        return BitBoard(self.0 | other.0);
     }
 }
 
@@ -76,7 +76,7 @@ impl BitXor for BitBoard {
     type Output = BitBoard;
 
     fn bitxor(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0 ^ other.0)
+        return BitBoard(self.0 ^ other.0);
     }
 }
 
@@ -84,7 +84,7 @@ impl BitXor for &BitBoard {
     type Output = BitBoard;
 
     fn bitxor(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0 ^ other.0)
+        return BitBoard(self.0 ^ other.0);
     }
 }
 
@@ -92,7 +92,7 @@ impl BitXor<&BitBoard> for BitBoard {
     type Output = BitBoard;
 
     fn bitxor(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0 ^ other.0)
+        return BitBoard(self.0 ^ other.0);
     }
 }
 
@@ -100,7 +100,7 @@ impl BitXor<BitBoard> for &BitBoard {
     type Output = BitBoard;
 
     fn bitxor(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0 ^ other.0)
+        return BitBoard(self.0 ^ other.0);
     }
 }
 
@@ -149,7 +149,7 @@ impl Mul for BitBoard {
     type Output = BitBoard;
 
     fn mul(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0.wrapping_mul(other.0))
+        return BitBoard(self.0.wrapping_mul(other.0));
     }
 }
 
@@ -157,7 +157,7 @@ impl Mul for &BitBoard {
     type Output = BitBoard;
 
     fn mul(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0.wrapping_mul(other.0))
+        return BitBoard(self.0.wrapping_mul(other.0));
     }
 }
 
@@ -165,7 +165,7 @@ impl Mul<&BitBoard> for BitBoard {
     type Output = BitBoard;
 
     fn mul(self, other: &BitBoard) -> BitBoard {
-        return  BitBoard(self.0.wrapping_mul(other.0))
+        return BitBoard(self.0.wrapping_mul(other.0));
     }
 }
 
@@ -173,7 +173,7 @@ impl Mul<BitBoard> for &BitBoard {
     type Output = BitBoard;
 
     fn mul(self, other: BitBoard) -> BitBoard {
-        return  BitBoard(self.0.wrapping_mul(other.0))
+        return BitBoard(self.0.wrapping_mul(other.0));
     }
 }
 
