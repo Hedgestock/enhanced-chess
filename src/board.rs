@@ -17,7 +17,10 @@ pub struct BoardCoordinates {
 
 impl BoardCoordinates {
     pub fn from_bit(bit: u8) -> Self {
-        Self { col: bit%8, row: bit/8 }
+        Self {
+            col: bit % 8,
+            row: bit / 8,
+        }
     }
 }
 
@@ -77,29 +80,30 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
                     BoardCoordinates { row: x, col: y },
                     Pickable::default(),
                 ))
+                .observe(on_drop_piece)
                 .observe(
                     |event: On<Pointer<Over>>,
                      mut query: Query<&mut Sprite, With<BoardCoordinates>>| {
-                        println!(
-                            "MyEvent was triggered on this specific tile! {:?}",
-                            event.entity
-                        );
                         if let Ok(mut sprite) = query.get_mut(event.entity) {
                             sprite.color = Color::linear_rgb(1.0, 0.0, 0.0);
                         }
                     },
-                )                .observe(
+                )
+                .observe(
                     |event: On<Pointer<Out>>,
                      mut query: Query<&mut Sprite, With<BoardCoordinates>>| {
-                        println!(
-                            "MyEvent was triggered on this specific tile! {:?}",
-                            event.entity
-                        );
                         if let Ok(mut sprite) = query.get_mut(event.entity) {
                             sprite.color = Color::WHITE;
                         }
                     },
                 );
         }
+    }
+}
+
+fn on_drop_piece(drop: On<Pointer<DragDrop>>, mut transforms: Query<&mut Transform>) {
+    if let Ok(mut transform_list) = transforms.get_many_mut([drop.dropped, drop.event_target()]) {
+        transform_list[0].translation.x = transform_list[1].translation.x;
+        transform_list[0].translation.y = transform_list[1].translation.y;
     }
 }
