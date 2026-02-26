@@ -15,6 +15,12 @@ pub struct BoardCoordinates {
     pub row: u8,
 }
 
+impl BoardCoordinates {
+    pub fn from_bit(bit: u8) -> Self {
+        Self { col: bit%8, row: bit/8 }
+    }
+}
+
 impl fmt::Display for BoardCoordinates {
     // This trait requires `fmt` with this exact signature.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

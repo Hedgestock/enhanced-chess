@@ -1,12 +1,14 @@
 mod board;
-mod pieces;
 mod game;
+mod pieces;
 
 use bevy::{picking::hover::PickingInteraction, prelude::*};
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
 use crate::{
-    board::BoardCoordinates, game::BitBoard, pieces::{ChessPiece, PieceColor, PieceType}
+    board::BoardCoordinates,
+    game::BitBoard,
+    pieces::{ChessPiece, PieceColor, PieceType},
 };
 
 fn main() {
@@ -27,7 +29,9 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
     println!("{:?}", game_state.black_pieces());
     println!("{:?}", get_piece_positions(game_state.white_pawn.clone()));
 
-    
+    for bit in get_piece_positions(game_state.white_pawn.clone()) {
+        println!("{:}", BoardCoordinates::from_bit(bit));
+    }
 
     // for i in 0..8 {
     //     commands.spawn(ChessPiece::new(
