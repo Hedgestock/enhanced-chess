@@ -44,12 +44,12 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
 
 fn get_piece_positions(mut board: BitBoard) -> Vec<u8> {
     let mut positions = Vec::new();
-    while board != 0 {
+    while board != BitBoard(0) {
         // Get index of the lowest set bit (0-63)
-        let sq = board.trailing_zeros() as u8;
+        let sq = board.0.trailing_zeros() as u8;
         positions.push(sq);
         // Clear the lowest set bit
-        board &= board - 1;
+        board &= board - BitBoard(1);
     }
     positions
 }
