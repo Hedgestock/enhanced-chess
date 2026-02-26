@@ -6,7 +6,7 @@ mod pieces;
 use bevy::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
-use crate::{bitboard::BitBoard, board::BoardCoordinates, pieces::ChessPiece};
+use crate::{board::BoardCoordinates, pieces::ChessPiece};
 
 fn main() {
     App::new()
@@ -26,12 +26,23 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
         let piece_type = &bb.0.0;
         let piece_color = &bb.0.1;
         for bit in bb.1.get_piece_positions() {
-            commands.spawn(ChessPiece::new(
-                piece_type.clone(),
-                piece_color.clone(),
-                BoardCoordinates::from_bit(bit),
-                &asset_server,
-            ));
+            commands
+                .spawn(ChessPiece::new(
+                    piece_type.clone(),
+                    piece_color.clone(),
+                    BoardCoordinates::from_bit(bit),
+                    &asset_server,
+                ))
+                .observe(on_drag_piece);
         }
+    }
+}
+
+fn on_drag_piece(drag: On<Pointer<Drag>>, mut transforms: Query<&mut Transform>) {
+    // Get the transform of the entity being dragged
+    if let Ok(mut transform) = transforms.get_mut(drag.entity) {
+        // Pointer<Drag> provides 'delta' in world space units for 2D sprites
+        transform.translation.x += drag.delta.x;
+        transform.translation.y -= drag.delta.y; // Y is often inverted in screen-to-world
     }
 }
