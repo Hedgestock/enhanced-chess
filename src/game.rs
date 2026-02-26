@@ -2,7 +2,47 @@ use bevy::{ecs::resource::Resource, platform::collections::HashMap};
 
 use crate::pieces::{PieceColor, PieceType};
 
-pub type BitBoard = u64;
+macro_rules! impl_bit_op {
+    ($trait:ident, $method:ident) => {
+        // 1. BitBoard x BitBoard
+        impl std::ops::$trait<BitBoard> for BitBoard {
+            type Output = BitBoard;
+            #[inline]
+            fn $method(self, rhs: BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+        }
+        // 2. &BitBoard x BitBoard
+        impl std::ops::$trait<BitBoard> for &BitBoard {
+            type Output = BitBoard;
+            #[inline]
+            fn $method(self, rhs: BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+        }
+        // 3. BitBoard x &BitBoard
+        impl std::ops::$trait<&BitBoard> for BitBoard {
+            type Output = BitBoard;
+            #[inline]
+            fn $method(self, rhs: &BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+        }
+        // 4. &BitBoard x &BitBoard
+        impl std::ops::$trait<&BitBoard> for &BitBoard {
+            type Output = BitBoard;
+            #[inline]
+            fn $method(self, rhs: &BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+        }
+    };
+}
+
+#[derive(Clone, Copy)]
+pub struct BitBoard( 
+    pub u64
+);
+
+impl_bit_op!(BitAnd, bitand);
+impl_bit_op!(BitOr, bitor);
+impl_bit_op!(BitXor, bitxor);
+impl_bit_op!(Add, add);
+impl_bit_op!(Sub, sub);
+impl_bit_op!(Mul, mul);
+impl_bit_op!(Div, div);
 
 #[derive(Resource)]
 pub struct GameState {
@@ -15,7 +55,7 @@ impl GameState {
             .pieces
             .iter()
             .filter(|(k, _v)| k.1 == PieceColor::White)
-            .fold(0, |acc, x| acc | x.1);
+            .fold(BitBoard(0), |acc, x| acc | x.1);
     }
 
     pub fn black_pieces(&self) -> BitBoard {
@@ -23,7 +63,7 @@ impl GameState {
             .pieces
             .iter()
             .filter(|(k, _v)| k.1 == PieceColor::Black)
-            .fold(0, |acc, x| acc | x.1);
+            .fold(BitBoard(0), |acc, x| acc | x.1);
     }
 }
 
@@ -33,51 +73,75 @@ impl Default for GameState {
             pieces: HashMap::from([
                 (
                     (PieceType::Pawn, PieceColor::White),
-                    0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_00000000,
+                    BitBoard(
+                        0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_00000000,
+                    ),
                 ),
                 (
                     (PieceType::Pawn, PieceColor::Black),
-                    0b00000000_11111111_00000000_00000000_00000000_00000000_00000000_00000000,
+                    BitBoard(
+                        0b00000000_11111111_00000000_00000000_00000000_00000000_00000000_00000000,
+                    ),
                 ),
                 (
                     (PieceType::Knight, PieceColor::White),
-                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_01000010,
+                    BitBoard(
+                        0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_01000010,
+                    ),
                 ),
                 (
                     (PieceType::Knight, PieceColor::Black),
-                    0b01000010_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    BitBoard(
+                        0b01000010_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    ),
                 ),
                 (
                     (PieceType::Bishop, PieceColor::White),
-                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
+                    BitBoard(
+                        0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
+                    ),
                 ),
                 (
                     (PieceType::Bishop, PieceColor::Black),
-                    0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    BitBoard(
+                        0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    ),
                 ),
                 (
                     (PieceType::Rook, PieceColor::White),
-                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000001,
+                    BitBoard(
+                        0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000001,
+                    ),
                 ),
                 (
                     (PieceType::Rook, PieceColor::Black),
-                    0b10000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    BitBoard(
+                        0b10000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    ),
                 ),
                 (
                     (PieceType::Queen, PieceColor::White),
-                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
+                    BitBoard(
+                        0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
+                    ),
                 ),
                 (
                     (PieceType::Queen, PieceColor::Black),
-                    0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    BitBoard(
+                        0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    ),
                 ),
                 (
                     (PieceType::King, PieceColor::White),
-                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000,
+                    BitBoard(
+                        0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000,
+                    ),
                 ),
                 (
                     (PieceType::King, PieceColor::Black),
-                    0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    BitBoard(
+                        0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                    ),
                 ),
             ]),
         }
