@@ -60,16 +60,40 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
                 white_square.clone()
             };
 
-            commands.spawn((
-                Sprite::from_image(image),
-                Transform::from_xyz(
-                    (x as f32 - BOARD_SIZE as f32 / 2.0) * SQUARE_SIZE,
-                    (y as f32 - BOARD_SIZE as f32 / 2.0) * SQUARE_SIZE,
-                    0.0,
-                ),
-                BoardCoordinates {row: x, col: y},
-                Pickable::default(),
-            ));
+            commands
+                .spawn((
+                    Sprite::from_image(image),
+                    Transform::from_xyz(
+                        (x as f32 - BOARD_SIZE as f32 / 2.0) * SQUARE_SIZE,
+                        (y as f32 - BOARD_SIZE as f32 / 2.0) * SQUARE_SIZE,
+                        0.0,
+                    ),
+                    BoardCoordinates { row: x, col: y },
+                    Pickable::default(),
+                ))
+                .observe(
+                    |event: On<Pointer<Over>>,
+                     mut query: Query<&mut Sprite, With<BoardCoordinates>>| {
+                        println!(
+                            "MyEvent was triggered on this specific tile! {:?}",
+                            event.entity
+                        );
+                        if let Ok(mut sprite) = query.get_mut(event.entity) {
+                            sprite.color = Color::linear_rgb(1.0, 0.0, 0.0);
+                        }
+                    },
+                )                .observe(
+                    |event: On<Pointer<Out>>,
+                     mut query: Query<&mut Sprite, With<BoardCoordinates>>| {
+                        println!(
+                            "MyEvent was triggered on this specific tile! {:?}",
+                            event.entity
+                        );
+                        if let Ok(mut sprite) = query.get_mut(event.entity) {
+                            sprite.color = Color::WHITE;
+                        }
+                    },
+                );
         }
     }
 }

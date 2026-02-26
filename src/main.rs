@@ -7,7 +7,7 @@ use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
 use crate::{
     board::BoardCoordinates,
-    pieces::{PieceColor, PieceType, chess_piece_factory},
+    pieces::{PieceColor, PieceType, ChessPiece},
 };
 
 fn main() {
@@ -17,121 +17,121 @@ fn main() {
         .add_plugins(WorldInspectorPlugin::new())
         .init_resource::<game::GameState>()
         .add_systems(Startup, (setup, board::setup))
-        .add_systems(Update, hover_system)
+        // .add_systems(Update, hover_system)
         .run();
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res<game::GameState>) {
     commands.spawn(Camera2d);
 
-    println!("{:?}", game_state.white_pieces())
-    println!("{:?}", game_state.black_pieces())
+    println!("{:?}", game_state.white_pieces());
+    println!("{:?}", game_state.black_pieces());
 
     // for i in 0..8 {
-    //     commands.spawn(chess_piece_factory(
+    //     commands.spawn(ChessPiece::new(
     //         PieceType::Pawn,
     //         PieceColor::White,
     //         BoardCoordinates { col: i, row: 1 },
     //         &asset_server,
     //     ));
-    //     commands.spawn(chess_piece_factory(
+    //     commands.spawn(ChessPiece::new(
     //         PieceType::Pawn,
     //         PieceColor::Black,
     //         BoardCoordinates { col: i, row: 6 },
     //         &asset_server,
     //     ));
     // }
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Rook,
     //     PieceColor::White,
     //     BoardCoordinates { col: 0, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Rook,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 0, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Rook,
     //     PieceColor::White,
     //     BoardCoordinates { col: 7, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Rook,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 7, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Knight,
     //     PieceColor::White,
     //     BoardCoordinates { col: 1, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Knight,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 1, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Knight,
     //     PieceColor::White,
     //     BoardCoordinates { col: 6, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Knight,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 6, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Bishop,
     //     PieceColor::White,
     //     BoardCoordinates { col: 2, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Bishop,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 2, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Bishop,
     //     PieceColor::White,
     //     BoardCoordinates { col: 5, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Bishop,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 5, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Queen,
     //     PieceColor::White,
     //     BoardCoordinates { col: 4, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::Queen,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 4, row: 7 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::King,
     //     PieceColor::White,
     //     BoardCoordinates { col: 3, row: 0 },
     //     &asset_server,
     // ));
-    // commands.spawn(chess_piece_factory(
+    // commands.spawn(ChessPiece::new(
     //     PieceType::King,
     //     PieceColor::Black,
     //     BoardCoordinates { col: 3, row: 7 },
