@@ -49,3 +49,18 @@ impl_bit_ops!(
     (Mul, mul, MulAssign, mul_assign),
     (Div, div, DivAssign, div_assign)
 );
+
+impl BitBoard {
+    pub fn get_piece_positions(&self) -> Vec<u8> {
+        let mut positions = Vec::new();
+        let mut board = self.clone();
+        while board != BitBoard(0) {
+            // Get index of the lowest set bit (0-63)
+            let sq = board.0.trailing_zeros() as u8;
+            positions.push(sq);
+            // Clear the lowest set bit
+            board &= board - BitBoard(1);
+        }
+        positions
+    }
+}

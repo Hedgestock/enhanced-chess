@@ -25,7 +25,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
     for bb in &game_state.pieces {
         let piece_type = &bb.0.0;
         let piece_color = &bb.0.1;
-        for bit in get_piece_positions(bb.1.clone()) {
+        for bit in bb.1.get_piece_positions() {
             commands.spawn(ChessPiece::new(
                 piece_type.clone(),
                 piece_color.clone(),
@@ -34,16 +34,4 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
             ));
         }
     }
-}
-
-fn get_piece_positions(mut board: BitBoard) -> Vec<u8> {
-    let mut positions = Vec::new();
-    while board != BitBoard(0) {
-        // Get index of the lowest set bit (0-63)
-        let sq = board.0.trailing_zeros() as u8;
-        positions.push(sq);
-        // Clear the lowest set bit
-        board &= board - BitBoard(1);
-    }
-    positions
 }
