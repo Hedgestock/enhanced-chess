@@ -30,119 +30,104 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
     println!("{:?}", get_piece_positions(game_state.white_pawn.clone()));
 
     for bit in get_piece_positions(game_state.white_pawn.clone()) {
-        println!("{:}", BoardCoordinates::from_bit(bit));
+        commands.spawn(ChessPiece::new(
+            PieceType::Pawn,
+            PieceColor::White,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.white_knight.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Knight,
+            PieceColor::White,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
     }
 
-    // for i in 0..8 {
-    //     commands.spawn(ChessPiece::new(
-    //         PieceType::Pawn,
-    //         PieceColor::White,
-    //         BoardCoordinates { col: i, row: 1 },
-    //         &asset_server,
-    //     ));
-    //     commands.spawn(ChessPiece::new(
-    //         PieceType::Pawn,
-    //         PieceColor::Black,
-    //         BoardCoordinates { col: i, row: 6 },
-    //         &asset_server,
-    //     ));
-    // }
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Rook,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 0, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Rook,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 0, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Rook,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 7, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Rook,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 7, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Knight,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 1, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Knight,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 1, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Knight,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 6, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Knight,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 6, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Bishop,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 2, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Bishop,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 2, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Bishop,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 5, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Bishop,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 5, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Queen,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 4, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::Queen,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 4, row: 7 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::King,
-    //     PieceColor::White,
-    //     BoardCoordinates { col: 3, row: 0 },
-    //     &asset_server,
-    // ));
-    // commands.spawn(ChessPiece::new(
-    //     PieceType::King,
-    //     PieceColor::Black,
-    //     BoardCoordinates { col: 3, row: 7 },
-    //     &asset_server,
-    // ));
+    for bit in get_piece_positions(game_state.white_bishop.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Bishop,
+            PieceColor::White,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.white_rook.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Rook,
+            PieceColor::White,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.white_queen.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Queen,
+            PieceColor::White,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.white_king.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::King,
+            PieceColor::White,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+
+    for bit in get_piece_positions(game_state.black_pawn.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Pawn,
+            PieceColor::Black,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.black_knight.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Knight,
+            PieceColor::Black,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+
+    for bit in get_piece_positions(game_state.black_bishop.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Bishop,
+            PieceColor::Black,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.black_rook.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Rook,
+            PieceColor::Black,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.black_queen.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::Queen,
+            PieceColor::Black,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
+    for bit in get_piece_positions(game_state.black_king.clone()) {
+        commands.spawn(ChessPiece::new(
+            PieceType::King,
+            PieceColor::Black,
+            BoardCoordinates::from_bit(bit),
+            &asset_server,
+        ));
+    }
 }
 
 fn hover_system(
