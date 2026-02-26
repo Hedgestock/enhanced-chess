@@ -1,274 +1,85 @@
-use std::ops::{BitAnd, BitAndAssign, BitOr, BitOrAssign, BitXor, BitXorAssign, Mul, Not};
+use bevy::{ecs::resource::Resource, platform::collections::HashMap};
 
-use bevy::ecs::resource::Resource;
+use crate::pieces::{PieceColor, PieceType};
 
-#[derive(Debug, PartialEq, Eq, Clone)]
-pub struct BitBoard(pub u64);
+pub type BitBoard = u64;
 
-impl BitAnd for BitBoard {
-    type Output = BitBoard;
-
-    fn bitand(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0 & other.0);
-    }
-}
-
-impl BitAnd for &BitBoard {
-    type Output = BitBoard;
-
-    fn bitand(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0 & other.0);
-    }
-}
-
-impl BitAnd<&BitBoard> for BitBoard {
-    type Output = BitBoard;
-
-    fn bitand(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0 & other.0);
-    }
-}
-
-impl BitAnd<BitBoard> for &BitBoard {
-    type Output = BitBoard;
-
-    fn bitand(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0 & other.0);
-    }
-}
-
-// Impl BitOr
-impl BitOr for BitBoard {
-    type Output = BitBoard;
-
-    fn bitor(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0 | other.0);
-    }
-}
-
-impl BitOr for &BitBoard {
-    type Output = BitBoard;
-
-    fn bitor(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0 | other.0);
-    }
-}
-
-impl BitOr<&BitBoard> for BitBoard {
-    type Output = BitBoard;
-
-    fn bitor(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0 | other.0);
-    }
-}
-
-impl BitOr<BitBoard> for &BitBoard {
-    type Output = BitBoard;
-
-    fn bitor(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0 | other.0);
-    }
-}
-
-// Impl BitXor
-
-impl BitXor for BitBoard {
-    type Output = BitBoard;
-
-    fn bitxor(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0 ^ other.0);
-    }
-}
-
-impl BitXor for &BitBoard {
-    type Output = BitBoard;
-
-    fn bitxor(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0 ^ other.0);
-    }
-}
-
-impl BitXor<&BitBoard> for BitBoard {
-    type Output = BitBoard;
-
-    fn bitxor(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0 ^ other.0);
-    }
-}
-
-impl BitXor<BitBoard> for &BitBoard {
-    type Output = BitBoard;
-
-    fn bitxor(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0 ^ other.0);
-    }
-}
-
-// Impl BitAndAssign
-
-impl BitAndAssign for BitBoard {
-    fn bitand_assign(&mut self, other: BitBoard) {
-        self.0 &= other.0;
-    }
-}
-
-impl BitAndAssign<&BitBoard> for BitBoard {
-    fn bitand_assign(&mut self, other: &BitBoard) {
-        self.0 &= other.0;
-    }
-}
-
-// Impl BitOrAssign
-impl BitOrAssign for BitBoard {
-    fn bitor_assign(&mut self, other: BitBoard) {
-        self.0 |= other.0;
-    }
-}
-
-impl BitOrAssign<&BitBoard> for BitBoard {
-    fn bitor_assign(&mut self, other: &BitBoard) {
-        self.0 |= other.0;
-    }
-}
-
-// Impl BitXor Assign
-impl BitXorAssign for BitBoard {
-    fn bitxor_assign(&mut self, other: BitBoard) {
-        self.0 ^= other.0;
-    }
-}
-
-impl BitXorAssign<&BitBoard> for BitBoard {
-    fn bitxor_assign(&mut self, other: &BitBoard) {
-        self.0 ^= other.0;
-    }
-}
-
-// Impl Mul
-impl Mul for BitBoard {
-    type Output = BitBoard;
-
-    fn mul(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0.wrapping_mul(other.0));
-    }
-}
-
-impl Mul for &BitBoard {
-    type Output = BitBoard;
-
-    fn mul(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0.wrapping_mul(other.0));
-    }
-}
-
-impl Mul<&BitBoard> for BitBoard {
-    type Output = BitBoard;
-
-    fn mul(self, other: &BitBoard) -> BitBoard {
-        return BitBoard(self.0.wrapping_mul(other.0));
-    }
-}
-
-impl Mul<BitBoard> for &BitBoard {
-    type Output = BitBoard;
-
-    fn mul(self, other: BitBoard) -> BitBoard {
-        return BitBoard(self.0.wrapping_mul(other.0));
-    }
-}
-
-// Impl Not
-impl Not for BitBoard {
-    type Output = BitBoard;
-
-    fn not(self) -> BitBoard {
-        BitBoard(!self.0)
-    }
-}
-
-impl Not for &BitBoard {
-    type Output = BitBoard;
-
-    fn not(self) -> BitBoard {
-        BitBoard(!self.0)
-    }
-}
-
-#[derive(Resource, Debug)]
+#[derive(Resource)]
 pub struct GameState {
-    pub white_pawn: BitBoard,
-    pub black_pawn: BitBoard,
-    pub white_knight: BitBoard,
-    pub black_knight: BitBoard,
-    pub white_bishop: BitBoard,
-    pub black_bishop: BitBoard,
-    pub white_rook: BitBoard,
-    pub black_rook: BitBoard,
-    pub white_queen: BitBoard,
-    pub black_queen: BitBoard,
-    pub white_king: BitBoard,
-    pub black_king: BitBoard,
+    pub pieces: HashMap<(PieceType, PieceColor), BitBoard>,
 }
 
 impl GameState {
     pub fn white_pieces(&self) -> BitBoard {
-        return &self.white_pawn
-            | &self.white_knight
-            | &self.white_bishop
-            | &self.white_rook
-            | &self.white_queen
-            | &self.white_king;
+        return self
+            .pieces
+            .iter()
+            .filter(|(k, _v)| k.1 == PieceColor::White)
+            .fold(0, |acc, x| acc | x.1);
     }
 
     pub fn black_pieces(&self) -> BitBoard {
-        return &self.black_pawn
-            | &self.black_knight
-            | &self.black_bishop
-            | &self.black_rook
-            | &self.black_queen
-            | &self.black_king;
+        return self
+            .pieces
+            .iter()
+            .filter(|(k, _v)| k.1 == PieceColor::Black)
+            .fold(0, |acc, x| acc | x.1);
     }
 }
 
 impl Default for GameState {
     fn default() -> Self {
         GameState {
-            white_pawn: BitBoard(
-                0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_00000000,
-            ),
-            black_pawn: BitBoard(
-                0b00000000_11111111_00000000_00000000_00000000_00000000_00000000_00000000,
-            ),
-            white_knight: BitBoard(
-                0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_01000010,
-            ),
-            black_knight: BitBoard(
-                0b01000010_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
-            ),
-            white_bishop: BitBoard(
-                0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
-            ),
-            black_bishop: BitBoard(
-                0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
-            ),
-            white_rook: BitBoard(
-                0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000001,
-            ),
-            black_rook: BitBoard(
-                0b10000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
-            ),
-            white_queen: BitBoard(
-                0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
-            ),
-            black_queen: BitBoard(
-                0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
-            ),
-            white_king: BitBoard(
-                0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000,
-            ),
-            black_king: BitBoard(
-                0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
-            ),
+            pieces: HashMap::from([
+                (
+                    (PieceType::Pawn, PieceColor::White),
+                    0b00000000_00000000_00000000_00000000_00000000_00000000_11111111_00000000,
+                ),
+                (
+                    (PieceType::Pawn, PieceColor::Black),
+                    0b00000000_11111111_00000000_00000000_00000000_00000000_00000000_00000000,
+                ),
+                (
+                    (PieceType::Knight, PieceColor::White),
+                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_01000010,
+                ),
+                (
+                    (PieceType::Knight, PieceColor::Black),
+                    0b01000010_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                ),
+                (
+                    (PieceType::Bishop, PieceColor::White),
+                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00100100,
+                ),
+                (
+                    (PieceType::Bishop, PieceColor::Black),
+                    0b00100100_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                ),
+                (
+                    (PieceType::Rook, PieceColor::White),
+                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_10000001,
+                ),
+                (
+                    (PieceType::Rook, PieceColor::Black),
+                    0b10000001_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                ),
+                (
+                    (PieceType::Queen, PieceColor::White),
+                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00001000,
+                ),
+                (
+                    (PieceType::Queen, PieceColor::Black),
+                    0b00001000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                ),
+                (
+                    (PieceType::King, PieceColor::White),
+                    0b00000000_00000000_00000000_00000000_00000000_00000000_00000000_00010000,
+                ),
+                (
+                    (PieceType::King, PieceColor::Black),
+                    0b00010000_00000000_00000000_00000000_00000000_00000000_00000000_00000000,
+                ),
+            ]),
         }
     }
 }

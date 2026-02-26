@@ -2,13 +2,13 @@ use bevy::prelude::*;
 
 use crate::board;
 
-#[derive(PartialEq, Eq, Component)]
+#[derive(PartialEq, Eq, Hash, Clone, Component)]
 pub enum PieceColor {
     White,
     Black,
 }
 
-#[derive(Component)]
+#[derive(PartialEq, Eq, Hash, Clone, Component)]
 pub enum PieceType {
     Pawn,
     Knight,
