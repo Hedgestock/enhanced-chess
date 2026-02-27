@@ -2,9 +2,12 @@ use std::fmt;
 
 use bevy::{
     asset::RenderAssetUsages,
+    picking::hover::Hovered,
     prelude::*,
     render::render_resource::{Extent3d, TextureDimension, TextureFormat},
 };
+
+use crate::pieces::{ChessPiece, PieceType};
 
 pub const BOARD_SIZE: u8 = 8;
 pub const SQUARE_SIZE: f32 = 50.0;
@@ -78,7 +81,10 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
                         0.0,
                     ),
                     BoardCoordinates { row: x, col: y },
-                    Pickable::default(),
+                    Pickable {
+                        is_hoverable: true,        // Allows HoverMap to track it (hovering works)
+                        should_block_lower: false, // Essential: Allows the pointer to "pass through"
+                    },
                 ))
                 .observe(on_drop_piece)
                 .observe(
@@ -101,9 +107,17 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
     }
 }
 
-fn on_drop_piece(drop: On<Pointer<DragDrop>>, mut transforms: Query<&mut Transform>) {
-    if let Ok(mut transform_list) = transforms.get_many_mut([drop.dropped, drop.event_target()]) {
-        transform_list[0].translation.x = transform_list[1].translation.x;
-        transform_list[0].translation.y = transform_list[1].translation.y;
+fn on_drop_piece(
+    drop: On<Pointer<DragDrop>>,
+    mut piece_transforms: Query<&mut Transform, (With<PieceType>, Without<BoardCoordinates>)>,
+    tile_transforms: Query<&Transform, (With<BoardCoordinates>, Without<PieceType>)>,
+) {
+    println!("target {}", drop.event_target());
+    println!("dropped {}", drop.dropped);
+    if let Ok(mut transform_dropped) = piece_transforms.get_mut(drop.dropped)
+        && let Ok(transform_target) = tile_transforms.get(drop.event_target())
+    {
+        transform_dropped.translation.x = transform_target.translation.x;
+        transform_dropped.translation.y = transform_target.translation.y;
     }
 }
