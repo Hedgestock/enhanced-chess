@@ -2,12 +2,11 @@ use std::fmt;
 
 use bevy::{
     asset::RenderAssetUsages,
-    picking::hover::Hovered,
     prelude::*,
     render::render_resource::{Extent3d, TextureDimension, TextureFormat},
 };
 
-use crate::pieces::{ChessPiece, PieceType};
+use crate::rendering::{ChessPiece, PieceType};
 
 pub const BOARD_SIZE: u8 = 8;
 pub const SQUARE_SIZE: f32 = 50.0;
@@ -28,7 +27,6 @@ impl BoardCoordinates {
 }
 
 impl fmt::Display for BoardCoordinates {
-    // This trait requires `fmt` with this exact signature.
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}{}", (self.col + 97) as char, self.row + 1)
     }
@@ -42,9 +40,7 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
             depth_or_array_layers: 1,
         },
         TextureDimension::D2,
-        // Initialize it with the specified color converted to a u8 array
         &LinearRgba::new(0.7, 0.7, 0.7, 1.0).to_u8_array(),
-        // Use the standard sRGB format
         TextureFormat::Rgba8UnormSrgb,
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
     ));
@@ -56,9 +52,7 @@ pub fn setup(mut commands: Commands, mut images: ResMut<Assets<Image>>) {
             depth_or_array_layers: 1,
         },
         TextureDimension::D2,
-        // Initialize it with the specified color converted to a u8 array
         &LinearRgba::WHITE.to_u8_array(),
-        // Use the standard sRGB format
         TextureFormat::Rgba8UnormSrgb,
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
     ));

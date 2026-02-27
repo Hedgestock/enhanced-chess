@@ -1,12 +1,14 @@
 mod bitboard;
 mod board;
 mod game;
-mod pieces;
+mod rendering;
 
 use bevy::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
-use crate::{board::BoardCoordinates, pieces::ChessPiece};
+use crate::rendering::ChessPiece;
+
+use crate::board::BoardCoordinates;
 
 fn main() {
     App::new()

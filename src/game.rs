@@ -1,8 +1,11 @@
+use std::fmt;
+
 use bevy::{ecs::resource::Resource, platform::collections::HashMap};
 
-use crate::{bitboard::BitBoard, pieces::{PieceColor, PieceType}};
-
-
+use crate::{
+    bitboard::BitBoard,
+    rendering::{PieceColor, PieceType},
+};
 
 #[derive(Resource)]
 pub struct GameState {
@@ -24,6 +27,22 @@ impl GameState {
             .iter()
             .filter(|(k, _v)| k.1 == PieceColor::Black)
             .fold(BitBoard(0), |acc, x| acc | x.1);
+    }
+
+    pub fn pieces(&self) -> BitBoard {
+        return self.pieces.iter().fold(BitBoard(0), |acc, x| acc | x.1);
+    }
+}
+
+impl fmt::Display for GameState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut array = ["o"; 64];
+        for ((piece, color), bb) in self.pieces.iter() {
+            for i in bb.get_piece_positions() {
+                array[i as usize] = "i";
+            }
+        }
+        writeln!(f, "{:?}", array)
     }
 }
 
