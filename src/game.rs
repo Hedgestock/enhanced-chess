@@ -36,13 +36,62 @@ impl GameState {
 
 impl fmt::Display for GameState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut array = ["o"; 64];
+        let mut array = ['o'; 64];
         for ((piece, color), bb) in self.pieces.iter() {
             for i in bb.get_piece_positions() {
-                array[i as usize] = "i";
+                array[i as usize] = match piece {
+                    PieceType::Pawn => {
+                        if *color == PieceColor::White {
+                            'P'
+                        } else {
+                            'p'
+                        }
+                    }
+                    PieceType::Knight => {
+                        if *color == PieceColor::White {
+                            'N'
+                        } else {
+                            'n'
+                        }
+                    }
+                    PieceType::Bishop => {
+                        if *color == PieceColor::White {
+                            'B'
+                        } else {
+                            'b'
+                        }
+                    }
+                    PieceType::Rook => {
+                        if *color == PieceColor::White {
+                            'R'
+                        } else {
+                            'r'
+                        }
+                    }
+                    PieceType::Queen => {
+                        if *color == PieceColor::White {
+                            'Q'
+                        } else {
+                            'q'
+                        }
+                    }
+                    PieceType::King => {
+                        if *color == PieceColor::White {
+                            'K'
+                        } else {
+                            'k'
+                        }
+                    }
+                };
             }
         }
-        writeln!(f, "{:?}", array)
+        for i in 0..8 {
+            for j in 0..8 {
+                write!(f, "{}", array[i*8 + j])?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }
 

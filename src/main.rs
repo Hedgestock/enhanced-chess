@@ -17,7 +17,6 @@ fn main() {
         .add_plugins(WorldInspectorPlugin::new())
         .init_resource::<game::GameState>()
         .add_systems(Startup, (setup, board::setup))
-        // .add_systems(Update, hover_system)
         .run();
 }
 
@@ -39,6 +38,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
                 .observe(on_drag_piece);
         }
     }
+
+    print!("Initial Game State:\n{}", *game_state);
 }
 
 fn on_drag_piece(drag: On<Pointer<Drag>>, mut transforms: Query<&mut Transform>) {
