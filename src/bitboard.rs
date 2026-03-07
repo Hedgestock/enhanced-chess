@@ -78,3 +78,128 @@ impl BitBoard {
         positions
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bb_add_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(8);
+        assert_eq!(bblhs + bbrhs, bbres);
+    }
+
+    #[test]
+    fn bb_sub_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(4);
+        assert_eq!(bblhs - bbrhs, bbres);
+    }
+
+    #[test]
+    fn bb_mul_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(12);
+        assert_eq!(bblhs * bbrhs, bbres);
+    }
+
+    #[test]
+    fn bb_div_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(3);
+        assert_eq!(bblhs / bbrhs, bbres);
+    }
+
+    #[test]
+    fn rbb_sub_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(4);
+        assert_eq!(&bblhs - bbrhs, bbres);
+    }
+
+    #[test]
+    fn rbb_mul_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(12);
+        assert_eq!(&bblhs * bbrhs, bbres);
+    }
+
+    #[test]
+    fn rbb_div_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(3);
+        assert_eq!(&bblhs / bbrhs, bbres);
+    }
+
+        #[test]
+    fn bb_add_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(8);
+        assert_eq!(bblhs + &bbrhs, bbres);
+    }
+
+    #[test]
+    fn bb_sub_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(4);
+        assert_eq!(bblhs - &bbrhs, bbres);
+    }
+
+    #[test]
+    fn bb_mul_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(12);
+        assert_eq!(bblhs * &bbrhs, bbres);
+    }
+
+    #[test]
+    fn bb_div_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(3);
+        assert_eq!(bblhs / &bbrhs, bbres);
+    }
+
+        #[test]
+    fn rbb_add_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(8);
+        assert_eq!(&bblhs + &bbrhs, bbres);
+    }
+
+    #[test]
+    fn rbb_sub_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(4);
+        assert_eq!(&bblhs - &bbrhs, bbres);
+    }
+
+    #[test]
+    fn rbb_mul_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(12);
+        assert_eq!(&bblhs * &bbrhs, bbres);
+    }
+
+    #[test]
+    fn rbb_div_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(3);
+        assert_eq!(&bblhs / &bbrhs, bbres);
+    }
+}
