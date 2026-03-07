@@ -1,3 +1,5 @@
+use std::fmt;
+
 macro_rules! impl_bit_ops {
     ($(($trait:ident, $method:ident, $assign_trait:ident, $assign_method:ident)),*) => {
         $(
@@ -49,6 +51,18 @@ impl_bit_ops!(
     (Mul, mul, MulAssign, mul_assign),
     (Div, div, DivAssign, div_assign)
 );
+
+impl fmt::Display for BitBoard {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for i in 0..8 {
+            for j in 0..8 {
+                write!(f, "{}", (self.0 >> (7 - i) * 8 + j) & 1)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
 
 impl BitBoard {
     pub fn get_piece_positions(&self) -> Vec<u8> {

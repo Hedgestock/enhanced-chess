@@ -40,6 +40,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
     }
 
     print!("Initial Game State:\n{}", *game_state);
+    print!("Initial Game State:\n{}", game_state.black_pieces());
 }
 
 fn on_drag_piece(drag: On<Pointer<Drag>>, mut transforms: Query<&mut Transform>) {
