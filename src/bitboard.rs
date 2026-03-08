@@ -12,17 +12,17 @@ macro_rules! impl_bit_ops {
             // &BitBoard op BitBoard
             impl std::ops::$trait<BitBoard> for &BitBoard {
                 type Output = BitBoard;
-                #[inline] fn $method(self, rhs: BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+                #[inline] fn $method(self, rhs: BitBoard) -> BitBoard { (*self).$method(rhs) }
             }
             // BitBoard op &BitBoard
             impl std::ops::$trait<&BitBoard> for BitBoard {
                 type Output = BitBoard;
-                #[inline] fn $method(self, rhs: &BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+                #[inline] fn $method(self, rhs: &BitBoard) -> BitBoard { self.$method(*rhs) }
             }
             // &BitBoard op &BitBoard
             impl std::ops::$trait<&BitBoard> for &BitBoard {
                 type Output = BitBoard;
-                #[inline] fn $method(self, rhs: &BitBoard) -> BitBoard { BitBoard(self.0.$method(rhs.0)) }
+                #[inline] fn $method(self, rhs: &BitBoard) -> BitBoard { (*self).$method(*rhs) }
             }
 
             // --- Assignment Permutations ---
@@ -191,6 +191,13 @@ mod tests {
     }
 
     #[test]
+    fn bb_add_rbb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(8);
+        assert_eq!(bblhs + &bbrhs, bbres);
+    }
+    #[test]
     fn rbb_sub_bb() {
         let bblhs = BitBoard(6);
         let bbrhs = BitBoard(2);
@@ -215,14 +222,6 @@ mod tests {
     }
 
     #[test]
-    fn bb_add_rbb() {
-        let bblhs = BitBoard(6);
-        let bbrhs = BitBoard(2);
-        let bbres = BitBoard(8);
-        assert_eq!(bblhs + &bbrhs, bbres);
-    }
-
-    #[test]
     fn rbb_and_bb() {
         let bblhs = BitBoard(5);
         let bbrhs = BitBoard(9);
@@ -244,6 +243,14 @@ mod tests {
         let bbrhs = BitBoard(10);
         let bbres = BitBoard(3);
         assert_eq!(&bblhs ^ bbrhs, bbres);
+    }
+   
+   #[test]
+    fn rbb_add_bb() {
+        let bblhs = BitBoard(6);
+        let bbrhs = BitBoard(2);
+        let bbres = BitBoard(8);
+        assert_eq!(&bblhs + bbrhs, bbres);
     }
 
     #[test]
