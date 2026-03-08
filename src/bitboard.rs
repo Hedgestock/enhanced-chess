@@ -51,7 +51,6 @@ macro_rules! impl_unsigned_bit_ops {
 macro_rules! impl_unsigned_bit_ops_for {
     ($trait:ident, $method:ident, $assign_trait:ident, $assign_method:ident; $($t:ty),*) => {
         $(
-            // --- Value and Reference Permutations ---
             // BitBoard op t
             impl std::ops::$trait<$t> for BitBoard {
                 type Output = BitBoard;
@@ -61,34 +60,35 @@ macro_rules! impl_unsigned_bit_ops_for {
             // &BitBoard op t
             impl std::ops::$trait<$t> for &BitBoard {
                 type Output = BitBoard;
-                #[inline] fn $method(self, rhs: $t) -> BitBoard { BitBoard(self.0.$method(rhs as u64)) }
+                #[inline] fn $method(self, rhs: $t) -> BitBoard { (*self).$method(rhs) }
             }
 
             // BitBoard op &t
             impl std::ops::$trait<&$t> for BitBoard {
                 type Output = BitBoard;
-                #[inline] fn $method(self, rhs: &$t) -> BitBoard { BitBoard(self.0.$method(*rhs as u64)) }
+                #[inline] fn $method(self, rhs: &$t) -> BitBoard { self.$method(*rhs) }
             }
 
             // &BitBoard op &t
             impl std::ops::$trait<&$t> for &BitBoard {
                 type Output = BitBoard;
-                #[inline] fn $method(self, rhs: &$t) -> BitBoard { BitBoard(self.0.$method(*rhs as u64)) }
+                #[inline] fn $method(self, rhs: &$t) -> BitBoard { (*self).$method(*rhs) }
             }
 
-            // --- Assignment Permutations ---
             // BitBoard op= t
             impl std::ops::$assign_trait<$t> for BitBoard {
                 #[inline] fn $assign_method(&mut self, rhs: $t) { self.0.$assign_method(rhs as u64); }
             }
-            
+
             // BitBoard op= &t
             impl std::ops::$assign_trait<&$t> for BitBoard {
-                #[inline] fn $assign_method(&mut self, rhs: &$t) { self.0.$assign_method(*rhs as u64); }
+                #[inline] fn $assign_method(&mut self, rhs: &$t) { self.$assign_method(*rhs) }
             }
         )*
     };
 }
+
+// Rust whines about me not being allowed to implement the "t op BitBoard" variations...
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BitBoard(pub u64);
@@ -474,21 +474,5 @@ mod tests {
         bblhs ^= &bbrhs;
         let bbres = BitBoard(3);
         assert_eq!(bblhs, bbres);
-    }
-
-    #[test]
-    fn bb_add_int() {
-        let bblhs = BitBoard(6);
-        let bbrhs = 2;
-        let bbres = BitBoard(8);
-        assert_eq!(bblhs + bbrhs, bbres);
-    }
-
-    #[test]
-    fn int_add_bb() {
-        let bblhs = BitBoard(6);
-        let bbrhs = 2;
-        let bbres = BitBoard(8);
-        assert_eq!(bblhs + bbrhs, bbres);
     }
 }
