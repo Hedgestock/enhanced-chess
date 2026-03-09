@@ -1,5 +1,39 @@
 use std::fmt;
 
+macro_rules! impl_unary_bit_ops {
+    ($trait:ident, $method:ident) => {
+        impl std::ops::$trait for BitBoard {
+            type Output = BitBoard;
+            #[inline] fn $method(self) -> BitBoard { BitBoard(self.0.$method()) }
+        }
+
+        impl std::ops::$trait for &BitBoard {
+            type Output = BitBoard;
+            #[inline] fn $method(self) -> BitBoard { BitBoard(self.0.$method()) }
+        }
+    };
+}
+
+macro_rules! impl_shift_ops {
+    ($(($trait:ident, $method:ident, $assign_trait:ident, $assign_method:ident)),*) => {
+        $(
+            impl std::ops::$trait<usize> for BitBoard {
+                type Output = BitBoard;
+                #[inline] fn $method(self, rhs: usize) -> BitBoard { BitBoard(self.0.$method(rhs)) }
+            }
+
+            impl std::ops::$trait<usize> for &BitBoard {
+                type Output = BitBoard;
+                #[inline] fn $method(self, rhs: usize) -> BitBoard { BitBoard(self.0.$method(rhs)) }
+            }
+
+            impl std::ops::$assign_trait<usize> for BitBoard {
+                #[inline] fn $assign_method(&mut self, rhs: usize) { self.0.$assign_method(rhs); }
+            }
+        )*
+    };
+}
+
 macro_rules! impl_bit_ops {
     ($(($trait:ident, $method:ident, $assign_trait:ident, $assign_method:ident)),*) => {
         $(
@@ -93,6 +127,14 @@ macro_rules! impl_unsigned_bit_ops_for {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BitBoard(pub u64);
 
+// Yeah, this is overkill, but macros are fun !
+impl_unary_bit_ops!(Not, not);
+
+impl_shift_ops!(
+    (Shl, shl, ShlAssign, shl_assign),
+    (Shr, shr, ShrAssign, shr_assign)
+);
+
 impl_bit_ops!(
     (BitAnd, bitand, BitAndAssign, bitand_assign),
     (BitOr, bitor, BitOrAssign, bitor_assign),
@@ -105,9 +147,10 @@ impl_bit_ops!(
 
 impl fmt::Display for BitBoard {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // let disp = self.reverse_bits(); // This puts black pieces on top
         for i in 0..8 {
             for j in 0..8 {
-                write!(f, "{}", (self.0 >> (7 - i) * 8 + j) & 1)?;
+                write!(f, "{}", if (self.0 >> i * 8 + j) & 1 == 1 {"▮"} else {"▯"})?;
             }
             writeln!(f)?;
         }
@@ -116,6 +159,10 @@ impl fmt::Display for BitBoard {
 }
 
 impl BitBoard {
+    pub fn from_index(index: u8) -> BitBoard {
+        BitBoard(1 << index)
+    }
+
     pub fn get_piece_positions(&self) -> Vec<u8> {
         let mut positions = Vec::new();
         let mut board = self.clone();
@@ -127,6 +174,21 @@ impl BitBoard {
             board &= board - BitBoard(1);
         }
         positions
+    }
+
+    #[inline]
+    pub fn reverse_bits(self) -> Self {
+        Self(self.0.reverse_bits())
+    }
+
+    #[inline]
+    pub fn wrapping_sub(self, rhs: Self) -> Self {
+        Self(self.0.wrapping_sub(rhs.0))
+    }
+
+    #[inline]
+    pub fn trailing_zeros(self) -> u32 {
+        self.0.trailing_zeros()
     }
 }
 
@@ -244,8 +306,8 @@ mod tests {
         let bbres = BitBoard(3);
         assert_eq!(&bblhs ^ bbrhs, bbres);
     }
-   
-   #[test]
+
+    #[test]
     fn rbb_add_bb() {
         let bblhs = BitBoard(6);
         let bbrhs = BitBoard(2);

@@ -1,4 +1,5 @@
 mod bitboard;
+mod movegen;
 mod board;
 mod game;
 mod rendering;
@@ -6,8 +7,9 @@ mod rendering;
 use bevy::prelude::*;
 use bevy_inspector_egui::{bevy_egui::EguiPlugin, quick::WorldInspectorPlugin};
 
-use crate::rendering::ChessPiece;
-
+use crate::bitboard::BitBoard;
+use crate::movegen::{bishop_attacks, queen_attacks, rook_attacks};
+use crate::rendering::{ChessPiece, PieceColor};
 use crate::board::BoardCoordinates;
 
 fn main() {
@@ -39,8 +41,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
         }
     }
 
-    print!("Initial Game State:\n{}", *game_state);
-    print!("Initial Game State:\n{}", game_state.black_pieces());
+    println!("Initial Game State:\n{}", *game_state);
+    println!("Black pieces:\n{}", game_state.black_pieces());
+    let test  = BitBoard::from_index(28);
+    println!("{}", PieceColor::Black as u8);
 }
 
 fn on_drag_piece(drag: On<Pointer<Drag>>, mut transforms: Query<&mut Transform>) {
