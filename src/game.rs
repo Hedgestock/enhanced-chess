@@ -13,23 +13,15 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn white_pieces(&self) -> BitBoard {
+    pub fn pieces(&self, color: PieceColor) -> BitBoard {
         return self
             .pieces
             .iter()
-            .filter(|(k, _v)| k.1 == PieceColor::White)
+            .filter(|(k, _v)| k.1 == color)
             .fold(BitBoard(0), |acc, x| acc | x.1);
     }
 
-    pub fn black_pieces(&self) -> BitBoard {
-        return self
-            .pieces
-            .iter()
-            .filter(|(k, _v)| k.1 == PieceColor::Black)
-            .fold(BitBoard(0), |acc, x| acc | x.1);
-    }
-
-    pub fn pieces(&self) -> BitBoard {
+    pub fn occupancy(&self) -> BitBoard {
         return self.pieces.iter().fold(BitBoard(0), |acc, x| acc | x.1);
     }
 }

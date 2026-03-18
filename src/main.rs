@@ -42,7 +42,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, game_state: Res
     }
 
     println!("Initial Game State:\n{}", *game_state);
-    println!("Black pieces:\n{}", game_state.black_pieces());
+    println!("Black pieces:\n{}", game_state.pieces(PieceColor::Black));
     let test  = BitBoard::from_index(28);
     println!("{}", PieceColor::Black as u8);
 }
