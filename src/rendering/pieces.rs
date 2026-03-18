@@ -2,13 +2,22 @@ use bevy::prelude::*;
 
 use crate::board;
 
-#[derive(PartialEq, Eq, Hash, Clone, Component)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug, Component)]
 pub enum PieceColor {
     White,
     Black,
 }
 
-#[derive(PartialEq, Eq, Hash, Clone, Component)]
+impl PieceColor {
+    pub fn opponent(self) -> PieceColor {
+        match self {
+            PieceColor::White => PieceColor::Black,
+            PieceColor::Black => PieceColor::White,
+        }
+    }
+}
+
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug, Component)]
 pub enum PieceType {
     Pawn,
     Knight,
